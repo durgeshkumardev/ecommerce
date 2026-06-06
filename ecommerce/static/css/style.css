@@ -1,0 +1,215 @@
+
+.nav-link{
+    transition: 0.3s;
+}
+
+.nav-link:hover{
+    color: #0d6efd !important;
+}
+
+.dropdown-item:hover{
+    background-color: #f1f1f1;
+}
+
+.form-control:focus{
+    box-shadow: none;
+    border: 1px solid #0d6efd;
+}
+
+.btn-dark{
+    transition: 0.3s;
+}
+
+.btn-dark:hover{
+    transform: translateY(-2px);
+}
+
+
+
+
+.slider-image{
+    height: 90vh;
+    object-fit: cover;
+    filter: brightness(55%);
+}
+
+.custom-caption{
+    bottom: 30%;
+}
+
+.custom-caption h1{
+    animation: fadeInDown 1s ease;
+}
+
+.custom-caption p{
+    animation: fadeInUp 1s ease;
+}
+
+.custom-caption .btn{
+    animation: zoomIn 1s ease;
+    transition: 0.3s;
+}
+
+.custom-caption .btn:hover{
+    transform: translateY(-3px);
+}
+
+.carousel-indicators button{
+    width: 12px !important;
+    height: 12px !important;
+    border-radius: 50%;
+}
+
+@keyframes fadeInDown{
+    from{
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to{
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp{
+    from{
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to{
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes zoomIn{
+    from{
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to{
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+
+
+
+.product-card{
+    transition: 0.4s;
+}
+
+.product-card:hover{
+    transform: translateY(-10px);
+}
+
+.product-image-wrapper{
+    overflow: hidden;
+}
+
+.product-image{
+    height: 280px;
+    object-fit: cover;
+    transition: 0.5s;
+}
+
+.product-card:hover .product-image{
+    transform: scale(1.1);
+}
+
+.btn-dark{
+    transition: 0.3s;
+}
+
+.btn-dark:hover{
+    transform: translateY(-2px);
+}
+
+
+
+
+
+.product-card{
+    transition: 0.4s;
+}
+
+.product-card:hover{
+    transform: translateY(-10px);
+}
+
+.product-image{
+    height: 250px;
+    object-fit: cover;
+}
+
+.btn-dark{
+    transition: 0.3s;
+}
+
+.btn-dark:hover{
+    transform: translateY(-2px);
+}
+
+
+
+
+
+
+body{
+    background: #f5f7fb;
+}
+
+.sidebar{
+    width: 270px;
+    min-height: 100vh;
+}
+
+.sidebar-link{
+    display: block;
+    padding: 14px 18px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #d1d5db;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.sidebar-link:hover,
+.sidebar-link.active{
+    background: #0d6efd;
+    color: white;
+}
+
+.main-content{
+    min-height: 100vh;
+}
+
+.dashboard-card{
+    transition: 0.4s;
+}
+
+.dashboard-card:hover{
+    transform: translateY(-6px);
+}
+
+.icon-box{
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.table th{
+    border: none;
+    color: #6b7280;
+}
+
+.table td{
+    vertical-align: middle;
+}
+

@@ -1,0 +1,164 @@
+{% extends 'adminlayout.html' %}
+
+{% block admincontent %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+
+                <!-- Header -->
+                <div class="bg-dark text-white p-4">
+
+                    <h2 class="fw-bold mb-1">
+                        Add New Product
+                    </h2>
+
+                    <p class="mb-0 text-light">
+                        Fill product details carefully
+                    </p>
+
+                </div>
+
+                <!-- Form -->
+                <div class="card-body p-5">
+
+                    <form method="POST" enctype="multipart/form-data">
+
+                        {% csrf_token %}
+
+                        <div class="row">
+
+                            <!-- Product Name -->
+                            <div class="col-md-6 mb-4">
+
+                                <label class="form-label fw-semibold">
+                                    Product Name
+                                </label>
+
+                                <input type="text"
+                                       name="product_name"
+                                       class="form-control custom-input"
+                                       placeholder="Enter product name"
+                                       required>
+
+                            </div>
+
+                            <!-- Category -->
+                            <div class="col-md-6 mb-4">
+
+                                <label class="form-label fw-semibold">
+                                    Category
+                                </label>
+
+                                <select name="category_id" class="form-select custom-input" required>
+                                    <option value="" disabled selected>Select category</option>
+                                    {% for category in categories %}
+                                        <option value="{{ category.id }}">{{ category.category_name }}</option>
+                                    {% endfor %}
+                                </select>
+
+                            </div>
+
+                            <!-- Price -->
+                            <div class="col-md-6 mb-4">
+
+                                <label class="form-label fw-semibold">
+                                    Short Description
+                                </label>
+
+                                <input type="text"
+                                       name="short_description"
+                                       class="form-control custom-input"
+                                       placeholder="Enter short description"
+                                       required>
+
+                            </div>
+
+                            <!-- Stock -->
+                            <div class="col-md-6 mb-4">
+
+                                <label class="form-label fw-semibold">
+                                    Long Description
+                                </label>
+
+                                <input type="text"
+                                       name="long_description"
+                                       class="form-control custom-input"
+                                       placeholder="Enter long description"
+                                       required>
+
+                            </div>
+
+                            <!-- Brand -->
+                            <div class="col-md-6 mb-4">
+
+                                <label class="form-label fw-semibold">
+                                    Price
+                                </label>
+
+                                <input type="text"
+                                       name="price"
+                                       class="form-control custom-input"
+                                       placeholder="Enter price">
+
+                            </div>
+
+                            <!-- Discount -->
+                            <div class="col-md-6 mb-4">
+
+                                <label class="form-label fw-semibold">
+                                    Stock Quantity
+                                </label>
+
+                                <input type="number"
+                                       name="stock_quantity"
+                                       class="form-control custom-input"
+                                       placeholder="Enter stock quantity">
+
+                            </div>
+
+                            
+
+                            <!-- Product Image -->
+                            <div class="col-12 mb-4">
+
+                                <label class="form-label fw-semibold">
+                                    Product Image
+                                </label>
+
+                                <input type="file"
+                                       name="product_image"
+                                       class="form-control custom-input">
+
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="col-12">
+
+                                <button class="btn btn-dark w-100 py-3 rounded-3 fw-semibold">
+
+                                    Add Product
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

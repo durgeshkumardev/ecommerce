@@ -1,0 +1,170 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register </title>
+    <link rel="stylesheet" href="{% static 'bootstrap/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+</head>
+<body>
+    <!-- Register Form -->
+  
+
+
+
+<div class="container d-flex justify-content-center align-items-center"
+     style="min-height: 100vh;">
+
+    <div class="card shadow-lg border-0 p-4"
+         style="width: 100%; max-width: 500px; border-radius: 20px;">
+
+        <div class="text-center mb-4">
+
+            <h2 class="fw-bold">Create Account</h2>
+
+            <p class="text-muted">
+                Register your account
+            </p>
+
+        </div>
+
+        <!-- Messages -->
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="alert alert-danger">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+        <form method="POST"
+              enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <!-- First Name -->
+            <div class="mb-3">
+
+                <label class="form-label">
+                    First Name
+                </label>
+
+                <input type="text"
+                       name="first_name"
+                       class="form-control">
+
+            </div>
+
+            <!-- Last Name -->
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Last Name
+                </label>
+
+                <input type="text"
+                       name="last_name"
+                       class="form-control">
+
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Email
+                </label>
+
+                <input type="email"
+                       name="email"
+                       class="form-control">
+
+            </div>
+
+            <!-- Mobile -->
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Mobile Number
+                </label>
+
+                <input type="text"
+                       name="mobile_no"
+                       class="form-control">
+
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Password
+                </label>
+
+                <input type="password"
+                       name="password"
+                       class="form-control">
+
+            </div>
+
+            <!-- Profile Image -->
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Profile Image
+                </label>
+
+                <input type="file"
+                       name="profile_image"
+                       class="form-control">
+
+            </div>
+
+            <!-- Register Button -->
+            <div class="d-grid">
+
+                <button type="submit"
+                        class="btn btn-dark">
+
+                    Register
+
+                </button>
+
+            </div>
+
+        </form>
+
+        <div class="text-center mt-3">
+
+            Already have an account?
+
+            {% comment %} <a href="{% url 'login_user' %}">
+                Login
+            </a> {% endcomment %}
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+    
+
+    <script src="{% static 'bootstrap/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

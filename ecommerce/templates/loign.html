@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login </title>
+    <link rel="stylesheet" href="{% static 'bootstrap/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+</head>
+<body>
+    <!-- Login Form -->
+
+
+
+<div class="container d-flex justify-content-center align-items-center"
+     style="min-height: 100vh;">
+
+    <div class="card shadow-lg border-0 p-4"
+         style="width: 100%; max-width: 420px; border-radius: 20px;">
+
+        <div class="text-center mb-4">
+
+            <h2 class="fw-bold">Login</h2>
+
+            <p class="text-muted">
+                Welcome back! Please login
+            </p>
+
+        </div>
+
+        <!-- Messages -->
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="alert alert-danger">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <!-- Email -->
+            <div class="mb-3">
+
+                <label class="form-label fw-semibold">
+                    Email
+                </label>
+
+                <input type="email"
+                       name="email"
+                       class="form-control form-control-lg rounded-3"
+                       placeholder="Enter your email">
+
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+
+                <label class="form-label fw-semibold">
+                    Password
+                </label>
+
+                <input type="password"
+                       name="password"
+                       class="form-control form-control-lg rounded-3"
+                       placeholder="Enter your password">
+
+            </div>
+ 
+            <!-- Login Button -->
+            <div class="d-grid mt-4">
+
+                <button type="submit"
+                        class="btn btn-dark btn-lg rounded-3">
+
+                    Login
+
+                </button>
+
+            </div>
+
+        </form>
+
+        <!-- Register Link -->
+        <div class="text-center mt-4">
+
+            <p class="mb-0">
+
+                Don't have an account?
+
+                {% comment %} <a href="{% url 'register_user' %}"
+                   class="text-decoration-none fw-bold">
+
+                    Register
+
+                </a> {% endcomment %}
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+    
+
+    <script src="{% static 'bootstrap/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>
