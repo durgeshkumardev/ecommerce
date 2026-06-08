@@ -162,6 +162,10 @@
         <div class="row g-4">
 
             <!-- Product 1 -->
+             <!-- show dynamic products -->
+
+             {% for product in products%}
+
             <div class="col-lg-3 col-md-6">
 
                 <div class="card border-0 shadow-sm rounded-4 overflow-hidden product-card">
@@ -172,40 +176,42 @@
                     </span>
 
                     <!-- Image -->
-                    <div class="product-image-wrapper">
+                    
 
-                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=800&auto=format&fit=crop"
+                    <a href="{% url 'product_details' product.id %}" class="stretched-link">
+                     <div class="product-image-wrapper">
+
+                        <img src="{{ product.images.first.image.url }}"
                              class="card-img-top product-image"
                              alt="Shoes">
 
                     </div>
 
+
+                    </a>
+
                     <!-- Body -->
                     <div class="card-body">
 
                         <h5 class="fw-bold">
-                            Nike Running Shoes
+                         {{ product.product_name }}
                         </h5>
 
                         <p class="text-muted small">
-                            Comfortable & stylish sports shoes
+                            {{ product.short_description }}
                         </p>
 
                         <!-- Rating -->
-                        <div class="mb-2 text-warning">
-                            ★★★★★
-                        </div>
+                      
 
                         <!-- Price -->
                         <div class="d-flex align-items-center gap-2 mb-3">
 
                             <h5 class="fw-bold text-dark mb-0">
-                                ₹2,999
+                                ₹{{ product.price }}
                             </h5>
 
-                            <del class="text-muted">
-                                ₹4,999
-                            </del>
+                          
 
                         </div>
 
@@ -228,170 +234,16 @@
 
             </div>
 
-            <!-- Product 2 -->
-            <div class="col-lg-3 col-md-6">
+            {% endfor %}
 
-                <div class="card border-0 shadow-sm rounded-4 overflow-hidden product-card">
-
-                    <div class="product-image-wrapper">
-
-                        <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=800&auto=format&fit=crop"
-                             class="card-img-top product-image"
-                             alt="Phone">
-
-                    </div>
-
-                    <div class="card-body">
-
-                        <h5 class="fw-bold">
-                            iPhone 15 Pro
-                        </h5>
-
-                        <p class="text-muted small">
-                            Premium smartphone with amazing camera
-                        </p>
-
-                        <div class="mb-2 text-warning">
-                            ★★★★★
-                        </div>
-
-                        <div class="d-flex align-items-center gap-2 mb-3">
-
-                            <h5 class="fw-bold text-dark mb-0">
-                                ₹1,19,999
-                            </h5>
-
-                        </div>
-
-                        <div class="d-flex gap-2">
-
-                            <button class="btn btn-dark w-100 rounded-pill">
-                                Add to Cart
-                            </button>
-
-                            <button class="btn btn-outline-dark rounded-pill">
-                                <i class="bi bi-heart"></i>
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- Product 3 -->
-            <div class="col-lg-3 col-md-6">
-
-                <div class="card border-0 shadow-sm rounded-4 overflow-hidden product-card">
-
-                    <span class="badge bg-success position-absolute m-3">
-                        New
-                    </span>
-
-                    <div class="product-image-wrapper">
-
-                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=800&auto=format&fit=crop"
-                             class="card-img-top product-image"
-                             alt="Watch">
-
-                    </div>
-
-                    <div class="card-body">
-
-                        <h5 class="fw-bold">
-                            Smart Watch
-                        </h5>
-
-                        <p class="text-muted small">
-                            Modern smartwatch with fitness tracking
-                        </p>
-
-                        <div class="mb-2 text-warning">
-                            ★★★★☆
-                        </div>
-
-                        <div class="d-flex align-items-center gap-2 mb-3">
-
-                            <h5 class="fw-bold text-dark mb-0">
-                                ₹5,499
-                            </h5>
-
-                        </div>
-
-                        <div class="d-flex gap-2">
-
-                            <button class="btn btn-dark w-100 rounded-pill">
-                                Add to Cart
-                            </button>
-
-                            <button class="btn btn-outline-dark rounded-pill">
-                                <i class="bi bi-heart"></i>
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- Product 4 -->
-            <div class="col-lg-3 col-md-6">
-
-                <div class="card border-0 shadow-sm rounded-4 overflow-hidden product-card">
-
-                    <div class="product-image-wrapper">
-
-                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=800&auto=format&fit=crop"
-                             class="card-img-top product-image"
-                             alt="Headphone">
-
-                    </div>
-
-                    <div class="card-body">
-
-                        <h5 class="fw-bold">
-                            Wireless Headphones
-                        </h5>
-
-                        <p class="text-muted small">
-                            Noise cancellation & deep bass
-                        </p>
-
-                        <div class="mb-2 text-warning">
-                            ★★★★★
-                        </div>
-
-                        <div class="d-flex align-items-center gap-2 mb-3">
-
-                            <h5 class="fw-bold text-dark mb-0">
-                                ₹3,999
-                            </h5>
-
-                        </div>
-
-                        <div class="d-flex gap-2">
-
-                            <button class="btn btn-dark w-100 rounded-pill">
-                                Add to Cart
-                            </button>
-
-                            <button class="btn btn-outline-dark rounded-pill">
-                                <i class="bi bi-heart"></i>
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
+           
 
         </div>
+
+
+
+
+        
 
     </div>
 
@@ -399,4 +251,7 @@
 
 
 
+
+
 {% endblock %}
+

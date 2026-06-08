@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Role, User, Category, Product
+from .models import Role, User, Category, Product, Cart, CartItem
 
 @admin.register(Role)
 class RoleAdmin(admin.ModelAdmin):
@@ -25,3 +25,10 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ('product_name', 'category', 'price', 'stock_quantity')
     search_fields = ('product_name', 'category')
     list_filter = ('category',)
+@admin.register(Cart)
+class AdminCart(admin.ModelAdmin):
+    list_display=()
+
+@admin.register(CartItem)
+class AdminAddTocard(admin.ModelAdmin):
+    list_display=('product', 'price', )

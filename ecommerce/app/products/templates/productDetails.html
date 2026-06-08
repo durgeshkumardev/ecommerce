@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+
+
+
+
+<div class="container mt-5">
+
+    <div class="row product-card">
+
+        <!-- Product Images -->
+        <div class="col-md-5">
+
+            {% if product.images.first %}
+                <img src="{{ product.images.first.image.url }}" 
+                     class="product-image mb-3"
+                     id="mainImage">
+            {% endif %}
+
+          
+
+        </div>
+
+
+        <!-- Product Details -->
+        <div class="col-md-7">
+
+            <h2>{{ product.product_name }}</h2>
+
+            <p class="text-muted">
+                Category : {{ product.category.name }}
+            </p>
+
+            <p class="sku">
+                SKU : {{ product.sku }}
+            </p>
+
+            <!-- Price -->
+            <div class="mb-3">
+
+                {% if product.discount_price %}
+                    <span class="price">
+                        ₹{{ product.discount_price }}
+                    </span>
+
+                    <span class="old-price">
+                        ₹{{ product.price }}
+                    </span>
+
+                {% else %}
+
+                    <span class="price">
+                        ₹{{ product.price }}
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- Stock -->
+            <p class="stock">
+                Stock : {{ product.stock_quantity }}
+            </p>
+
+            <!-- Short Description -->
+            
+
+            <!-- Long Description -->
+            <h5> Description</h5>
+
+            <p>
+                {{ product.long_description }}
+            </p>
+
+            <!-- Buttons -->
+            <div class="mt-4">
+
+                <button id="productId" class="btn btn-primary btn-lg accordionion-button add-to-cart"
+                        data-cart-product-id="{{ product.id }}">
+                    Add To Cart
+                </button>
+
+                <button class="btn btn-success btn-lg">
+                    Buy Now
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    // add to card using the javascript fetch api 
+
+    document.querySelector('.add-to-cart').addEventListener('click', function() {
+        const product_id = this.getAttribute('data-cart-product-id');
+
+        
+
+        fetch(`/add-to-cart/${product_id}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ product_id: product_id })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Product added to cart successfully!');
+            } else {
+                alert('Failed to add product to cart.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while adding the product to cart.');
+        });
+    });
+
+
+
+
+
+
+
+
+</script>
+
+
+
+
+{% endblock %}
+
+

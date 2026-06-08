@@ -143,4 +143,277 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return self.product.product_name
+    
+
+
+# ==================================
+# USER ADDRESSES
+# ==================================
+class UserAddress(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='addresses'
+    )
+
+    full_name = models.CharField(max_length=150)
+
+    mobile_no = models.CharField(max_length=20)
+
+    address_line1 = models.CharField(max_length=300)
+
+    address_line2 = models.CharField(
+        max_length=300,
+        blank=True,
+        null=True
+    )
+
+    city = models.CharField(max_length=100)
+
+    state_name = models.CharField(max_length=100)
+
+    country_name = models.CharField(max_length=100)
+
+    pincode = models.CharField(max_length=20)
+
+    is_default = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.full_name} - {self.city}"
+
+
+# ==================================
+# CART
+# ==================================
+class Cart(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='cart'
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.username
+
+
+# ==================================
+# CART ITEMS
+# ==================================
+class CartItem(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    cart = models.ForeignKey(
+        Cart,
+        on_delete=models.CASCADE,
+        related_name='items'
+    )
+
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE
+    )
+
+    quantity = models.PositiveIntegerField(default=1)
+
+    price = models.DecimalField(
+        max_digits=18,
+        decimal_places=2
+    )
+
+    def __str__(self):
+        return self.product.product_name
+
+
+# ==================================
+# ORDERS
+# ==================================
+class Order(models.Model):
+
+    ORDER_STATUS = [
+        ('Pending', 'Pending'),
+        ('Confirmed', 'Confirmed'),
+        ('Shipped', 'Shipped'),
+        ('Delivered', 'Delivered'),
+        ('Cancelled', 'Cancelled'),
+    ]
+
+    PAYMENT_STATUS = [
+        ('Pending', 'Pending'),
+        ('Paid', 'Paid'),
+        ('Failed', 'Failed'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='orders'
+    )
+
+    address = models.ForeignKey(
+        UserAddress,
+        on_delete=models.SET_NULL,
+        null=True
+    )
+
+    order_number = models.CharField(
+        max_length=50,
+        unique=True
+    )
+
+    order_date = models.DateTimeField(auto_now_add=True)
+
+    total_amount = models.DecimalField(
+        max_digits=18,
+        decimal_places=2
+    )
+
+    order_status = models.CharField(
+        max_length=20,
+        choices=ORDER_STATUS,
+        default='Pending'
+    )
+
+    payment_status = models.CharField(
+        max_length=20,
+        choices=PAYMENT_STATUS,
+        default='Pending'
+    )
+
+    def __str__(self):
+        return self.order_number
+
+
+# ==================================
+# ORDER ITEMS
+# ==================================
+class OrderItem(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.CASCADE,
+        related_name='items'
+    )
+
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE
+    )
+
+    product_name = models.CharField(max_length=200)
+
+    quantity = models.PositiveIntegerField()
+
+    price = models.DecimalField(
+        max_digits=18,
+        decimal_places=2
+    )
+
+    total_price = models.DecimalField(
+        max_digits=18,
+        decimal_places=2
+    )
+
+    def __str__(self):
+        return self.product_name
+
+
+# ==================================
+# PAYMENTS
+# ==================================
+class Payment(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    order = models.OneToOneField(
+        Order,
+        on_delete=models.CASCADE,
+        related_name='payment'
+    )
+
+    payment_method = models.CharField(max_length=50)
+
+    transaction_id = models.CharField(
+        max_length=200,
+        blank=True,
+        null=True
+    )
+
+    amount = models.DecimalField(
+        max_digits=18,
+        decimal_places=2
+    )
+
+    payment_date = models.DateTimeField(
+        blank=True,
+        null=True
+    )
+
+    payment_status = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.payment_method
+
+
+# ==================================
+# WISHLIST
+# ==================================
+class Wishlist(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='wishlist'
+    )
+
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['user', 'product']
+
+    def __str__(self):
+        return self.product.product_name
+
+
+# ==================================
+# PRODUCT REVIEWS
+# ==================================
+class ProductReview(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
+
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name='reviews'
+    )
+
+    rating = models.PositiveSmallIntegerField()
+
+    review_text = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.product.product_name} ({self.rating})"
 

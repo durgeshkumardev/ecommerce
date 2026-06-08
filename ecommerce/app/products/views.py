@@ -1,19 +1,30 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse
 
 from django.contrib import messages
 
 # import for the logn 
 
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 
 # Create your views here.
 
-from .models import Role, User, Category, Product, ProductImage
+from .models import Cart, Role, User, Category, Product, ProductImage, CartItem
 
 def home(request):
-    return render(request, 'home.html')
+    products = Product.objects.prefetch_related('images').filter(is_active=True)
+    return render(request, 'home.html', {'products': products})
+   
+
+# show product details page 
+def product_details(request, product_id):
+    ## get_404 product = get_object_or_404(Product, id=product_id)
+    product = Product.objects.prefetch_related('images').get(id=product_id)
+    return render(request, 'productDetails.html', {'product': product})
 
 def electronics(request):
     return render(request,'electronic.html')
@@ -146,6 +157,14 @@ def add_product(request):
 
 
 
+# show all product product on the home page and show product details on the product details page
+
+def product_list(request):
+    products = Product.objects.filter(is_active=True)
+    return render(request, 'productList.html', {'products': products})
+
+
+
 # user registration view find the  role from the database user and that id add in the user table and save the user data in database
 
 def user_registration(request):
@@ -206,33 +225,89 @@ def user_registration(request):
     return render(request, 'register.html')
 
 
-# user login 
+# USER LOGIN
 def user_login(request):
 
-    if request.method == 'POST':
-        try:
-            email = request.POST.get('email')
-            password = request.POST.get('password')
+    # if user already login
+    if request.user.is_authenticated:
+        return redirect('home_page')
 
-            # form validation
-            if not email or not password:
-                messages.error(request, 'Email and password are required!')
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        # form validation
+        if not email or not password:
+            messages.error(request, 'Email and Password are required!')
+            return render(request, 'login.html')
+
+        try:
+            # check user by email
+            user_obj = User.objects.filter(email=email).first()
+
+            # if email not exist
+            if not user_obj:
+                messages.error(request, 'Email does not exist!')
                 return render(request, 'login.html')
 
-            # check user authentication
-            user = User.objects.filter(email=email).first()
+            # authenticate using username
+            user = authenticate(
+                request,
+                username=user_obj.username,
+                password=password
+            )
 
-            if user and user.check_password(password):
-                messages.success(request, 'Login successful!')
-                return redirect(request, 'home.html')
+            # login success
+            if user is not None:
+                login(request, user)
+
+                messages.success(request, 'Login Successful!')
+                return redirect('home_page')
+
+            # wrong password
             else:
-                messages.error(request, 'Invalid email or password!')
+                messages.error(request, 'Invalid Password!')
                 return render(request, 'login.html')
 
         except Exception as e:
-            messages.error(request, f'Error during login: {str(e)}')
+            messages.error(request, f'Something went wrong: {e}')
             return render(request, 'login.html')
 
-
-
     return render(request, 'login.html')
+
+# add to card business logic here
+
+
+def add_to_cart(request, product_id):
+
+    print(product_id)
+   
+
+    user=request.user
+
+    product = get_object_or_404(Product, id=product_id)
+
+    # check if the user has a cart, if not create one
+    cart, created=Cart.objects.get_or_create(user=user)
+
+    # check if the product is already in the cart, if not add it
+    cart_item=CartItem.objects.filter(cart=cart, product=product).first()
+
+    if cart_item:
+        cart_item.quantity=cart_item.quantity+1
+        cart_item.save()
+    else:
+        # add product to the cart_item table
+        CartItem.objects.create(
+            cart=cart,
+            product=product,
+            quantity=1 ,
+            price=product.price
+        )
+
+      
+    
+    return HttpResponse("Add to card successfully")
+
+
+

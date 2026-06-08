@@ -5,6 +5,10 @@ from . import views
 urlpatterns = [
     path('',views.home, name="home_page"),
     path('electronics/', views.electronics, name="electronic_page"),
+    # product details page url
+    path('product/<uuid:product_id>/', views.product_details, name='product_details'),
+    # add to cart Url
+    path('add-to-cart/<uuid:product_id>/', views.add_to_cart, name="add-to-cart"),
 
     # admin controll
 
@@ -19,7 +23,8 @@ urlpatterns = [
 
     # authentication
     path('account/register/',views.user_registration, name='register_user'),
-   
-  
+    path('account/login/',views.user_login, name='login_user'),
+ 
+
 ]
 
