@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 from django.contrib import messages
 
@@ -15,15 +15,20 @@ from django.contrib.auth.models import User
 
 from .models import Cart, Role, User, Category, Product, ProductImage, CartItem
 
+
 def home(request):
+
     products = Product.objects.prefetch_related('images').filter(is_active=True)
+  
     return render(request, 'home.html', {'products': products})
    
 
 # show product details page 
 def product_details(request, product_id):
+   
     ## get_404 product = get_object_or_404(Product, id=product_id)
     product = Product.objects.prefetch_related('images').get(id=product_id)
+   
     return render(request, 'productDetails.html', {'product': product})
 
 def electronics(request):
@@ -31,6 +36,8 @@ def electronics(request):
 
 
 def admin_dashboard(request):
+
+
     return render(request,'dashboard.html')
 
 
@@ -41,6 +48,7 @@ def add_product(request):
 
 
 def  add_category(request):
+    
     if request.method == 'POST':
         try:
             category_name = request.POST.get('category_name')
@@ -278,36 +286,53 @@ def user_login(request):
 # add to card business logic here
 
 
+
+
 def add_to_cart(request, product_id):
 
-    print(product_id)
-   
+    if request.method == "POST":
 
-    user=request.user
+       
+    
+        if request.user.is_authenticated:
+            messages.success(request, 'User is logged in')
+        else:
+            messages.error(request, 'Please log in to add items to your cart')
+            return JsonResponse({
+                "success": False,
+                "message": "User is not authenticated"
+            })
 
-    product = get_object_or_404(Product, id=product_id)
+        product = get_object_or_404(Product, id=product_id)
 
-    # check if the user has a cart, if not create one
-    cart, created=Cart.objects.get_or_create(user=user)
-
-    # check if the product is already in the cart, if not add it
-    cart_item=CartItem.objects.filter(cart=cart, product=product).first()
-
-    if cart_item:
-        cart_item.quantity=cart_item.quantity+1
-        cart_item.save()
-    else:
-        # add product to the cart_item table
-        CartItem.objects.create(
-            cart=cart,
-            product=product,
-            quantity=1 ,
-            price=product.price
+        cart, created = Cart.objects.get_or_create(
+            user=request.user
         )
 
-      
-    
-    return HttpResponse("Add to card successfully")
+        cart_item = CartItem.objects.filter(
+            cart=cart,
+            product=product
+        ).first()
 
+        if cart_item:
+            cart_item.quantity += 1
+            cart_item.save()
+        else:
+            CartItem.objects.create(
+                cart=cart,
+                product=product,
+                quantity=1,
+                price=product.price
+            )
+
+        return JsonResponse({
+            "success": True,
+            "message": "Product added to cart successfully"
+        })
+
+    return JsonResponse({
+        "success": False,
+        "message": "Invalid request"
+    })
 
 

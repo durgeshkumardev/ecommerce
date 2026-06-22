@@ -3,10 +3,6 @@
 {% block content %}
 
 
-
-
-
-
 <div class="container mt-5">
 
     <div class="row product-card">
@@ -78,11 +74,12 @@
 
             <!-- Buttons -->
             <div class="mt-4">
-
-                <button id="productId" class="btn btn-primary btn-lg accordionion-button add-to-cart"
-                        data-cart-product-id="{{ product.id }}">
-                    Add To Cart
-                </button>
+           {% csrf_token %}
+               <button
+        class="btn btn-primary btn-lg add-to-cart"
+        data-product-id="{{ product.id }}">
+        Add To Cart
+    </button>
 
                 <button class="btn btn-success btn-lg">
                     Buy Now
@@ -96,44 +93,52 @@
 
 </div>
 
-
 <script>
 
-    // add to card using the javascript fetch api 
+document.addEventListener('DOMContentLoaded', function() {
 
-    document.querySelector('.add-to-cart').addEventListener('click', function() {
-        const product_id = this.getAttribute('data-cart-product-id');
+    const button = document.querySelector('.add-to-cart');
 
-        
+    button.addEventListener('click', function() {
 
-        fetch(`/add-to-cart/${product_id}/`, {
+        const productId = this.dataset.productId;
+
+        const csrfToken = document.querySelector(
+            '[name=csrfmiddlewaretoken]'
+        ).value;
+
+        fetch(`/add-to-cart/${productId}/`, {
             method: 'POST',
+
             headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: JSON.stringify({ product_id: product_id })
+                'X-CSRFToken': csrfToken,
+                'Content-Type': 'application/json'
+            }
         })
         .then(response => response.json())
         .then(data => {
+
             if (data.success) {
-                alert('Product added to cart successfully!');
+
+                alert(data.message);
+
             } else {
-                alert('Failed to add product to cart.');
+
+                alert(data.message);
+
             }
+
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while adding the product to cart.');
+
+            console.error(error);
+            alert('Something went wrong');
+
         });
+
     });
 
-
-
-
-
-
-
+});
 
 </script>
 
