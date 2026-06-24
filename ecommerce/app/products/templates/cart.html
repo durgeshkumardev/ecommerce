@@ -1,0 +1,332 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container my-5">
+
+```
+<div class="row">
+
+    <!-- Delivery Address -->
+    <div class="col-lg-3 mb-4">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+
+                <h5 class="mb-0">Delivery Address</h5>
+
+                <button class="btn btn-sm btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#addressModal">
+                    Add
+                </button>
+
+            </div>
+
+            <div class="card-body">
+
+                {% if default_address %}
+
+                <div class="border rounded p-3">
+
+                    <h6 class="fw-bold">
+                        {{ default_address.full_name }}
+                    </h6>
+
+                    <p class="mb-1">
+                        {{ default_address.address_line1 }}
+                    </p>
+
+                    {% if default_address.address_line2 %}
+                    <p class="mb-1">
+                        {{ default_address.address_line2 }}
+                    </p>
+                    {% endif %}
+
+                    <p class="mb-1">
+                        {{ default_address.city }},
+                        {{ default_address.state_name }}
+                    </p>
+
+                    <p class="mb-1">
+                        {{ default_address.country_name }}
+                        - {{ default_address.pincode }}
+                    </p>
+
+                    <p class="mb-2">
+                        {{ default_address.mobile_no }}
+                    </p>
+
+                    <span class="badge bg-success">
+                        Default Address
+                    </span>
+
+                </div>
+
+                {% else %}
+
+                <div class="text-center">
+
+                    <p class="text-muted">
+                        No address available
+                    </p>
+
+                    <button class="btn btn-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#addressModal">
+                        Add Address
+                    </button>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Cart Products -->
+    <div class="col-lg-6 mb-4">
+
+        <h4 class="mb-3">
+            Shopping Cart
+        </h4>
+
+        {% for item in items %}
+
+        <div class="card border-0 shadow-sm mb-3">
+
+            <div class="card-body">
+
+                <div class="row align-items-center">
+
+                    <div class="col-md-3">
+
+                        {% with image=item.product.images.first %}
+                        {% if image %}
+                        <img src="{{ image.image.url }}"
+                             class="img-fluid rounded"
+                             alt="{{ item.product.product_name }}">
+                        {% endif %}
+                        {% endwith %}
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <h5 class="mb-2">
+                            {{ item.product.product_name }}
+                        </h5>
+
+                        <p class="text-muted small">
+                            {{ item.product.short_description }}
+                        </p>
+
+                        <h6 class="text-success">
+                            ₹{{ item.price }}
+                        </h6>
+
+                    </div>
+
+                    <div class="col-md-3 text-center">
+
+                        <div class="border rounded p-2 mb-2">
+                            Qty : {{ item.quantity }}
+                        </div>
+
+                        <h6>
+                            ₹{{ item.subtotal }}
+                        </h6>
+
+                        <a href="#"
+                           class="btn btn-sm btn-outline-danger">
+                            Remove
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="alert alert-warning">
+            Your cart is empty.
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <!-- Order Summary -->
+    <div class="col-lg-3">
+
+        <div class="card border-0 shadow-sm sticky-top">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0">
+                    Price Details
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Items Total</span>
+                    <span>₹{{ total }}</span>
+                </div>
+
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Delivery Charges</span>
+                    <span class="text-success">
+                        FREE
+                    </span>
+                </div>
+
+                <hr>
+
+                <div class="d-flex justify-content-between fw-bold fs-5">
+                    <span>Total Amount</span>
+                    <span>₹{{ total }}</span>
+                </div>
+
+                <button class="btn btn-success w-100 mt-4">
+                    Proceed To Checkout
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+```
+
+</div>
+
+<!-- Address Modal -->
+
+<div class="modal fade"
+     id="addressModal"
+     tabindex="-1">
+
+```
+<div class="modal-dialog modal-lg">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <h5 class="modal-title">
+                Add New Address
+            </h5>
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+            </button>
+
+        </div>
+
+        <div class="modal-body">
+
+            <form method="POST"
+                  action="{% url 'add_address' %}">
+
+                {% csrf_token %}
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+                        <input type="text"
+                               name="full_name"
+                               class="form-control"
+                               placeholder="Full Name"
+                               required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <input type="text"
+                               name="mobile_no"
+                               class="form-control"
+                               placeholder="Mobile Number"
+                               required>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <input type="text"
+                               name="address_line1"
+                               class="form-control"
+                               placeholder="Address Line 1"
+                               required>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <input type="text"
+                               name="address_line2"
+                               class="form-control"
+                               placeholder="Address Line 2">
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <input type="text"
+                               name="city"
+                               class="form-control"
+                               placeholder="City"
+                               required>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <input type="text"
+                               name="state_name"
+                               class="form-control"
+                               placeholder="State"
+                               required>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <input type="text"
+                               name="country_name"
+                               class="form-control"
+                               placeholder="Country"
+                               required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <input type="text"
+                               name="pincode"
+                               class="form-control"
+                               placeholder="Pincode"
+                               required>
+                    </div>
+
+                    <div class="col-12">
+                        <button type="submit"
+                                class="btn btn-primary w-100">
+                            Save Address
+                        </button>
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+```
+
+</div>
+
+{% endblock %}

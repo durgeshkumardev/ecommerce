@@ -13,7 +13,7 @@ from django.contrib.auth.models import User
 
 # Create your views here.
 
-from .models import Cart, Role, User, Category, Product, ProductImage, CartItem
+from .models import Cart, Role, User, Category, Product, ProductImage, CartItem,UserAddress
 
 
 def home(request):
@@ -336,3 +336,90 @@ def add_to_cart(request, product_id):
     })
 
 
+
+def cart_page(request):
+
+    cart = Cart.objects.filter(user=request.user).first()
+
+    items = []
+    total = 0
+
+    if cart:
+        items = cart.items.select_related('product')
+
+        for item in items:
+            item.subtotal = item.price * item.quantity
+            total += item.subtotal
+
+    # All user addresses
+    addresses = UserAddress.objects.filter(
+        user=request.user
+    )
+
+    # Default address
+    default_address = addresses.filter(
+        is_default=True
+    ).first()
+
+    context = {
+        'items': items,
+        'total': total,
+        'addresses': addresses,
+        'default_address': default_address,
+    }
+
+    return render(request,'cart.html',context)
+
+
+def add_address(request):
+
+    if request.method == 'POST':
+
+        full_name = request.POST.get('full_name')
+        mobile_no = request.POST.get('mobile_no')
+        address_line1 = request.POST.get('address_line1')
+        address_line2 = request.POST.get('address_line2')
+        city = request.POST.get('city')
+        state_name = request.POST.get('state_name')
+        country_name = request.POST.get('country_name')
+        pincode = request.POST.get('pincode')
+
+        # First address becomes default
+        is_default = not UserAddress.objects.filter(
+            user=request.user
+        ).exists()
+
+        UserAddress.objects.create(
+            user=request.user,
+            full_name=full_name,
+            mobile_no=mobile_no,
+            address_line1=address_line1,
+            address_line2=address_line2,
+            city=city,
+            state_name=state_name,
+            country_name=country_name,
+            pincode=pincode,
+            is_default=is_default
+        )
+
+        messages.success(
+            request,
+            "Address added successfully."
+        )
+
+    return redirect('cart_page')
+
+
+
+def set_default_address(request, address_id):
+
+    UserAddress.objects.filter(
+        user=request.user
+    ).update(is_default=False)
+
+    UserAddress.objects.filter(
+        id=address_id,
+        user=request.user
+    ).update(is_default=True)
+
+    return redirect('cart_page')

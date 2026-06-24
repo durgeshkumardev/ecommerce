@@ -10,6 +10,10 @@ urlpatterns = [
     # add to cart Url
     path('add-to-cart/<uuid:product_id>/', views.add_to_cart, name="add-to-cart"),
 
+    path('cart/', views.cart_page, name='cart_page'),
+    path('add-address/', views.add_address, name='add_address'),
+    path('set-default-address/<uuid:address_id>/', views.set_default_address, name='set_default_address'),
+
     # admin controll
 
     path('admin/dashboard/',views.admin_dashboard,name='admin_dashbaord'),
