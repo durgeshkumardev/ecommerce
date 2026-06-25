@@ -23,6 +23,8 @@ urlpatterns = [
     path('admin/category/add',views.add_category, name='add_category'),
     path('admin/category/list',views.category_list, name='category_list'),
     path('admin/role/add',views.add_user_role, name='add_role'),
+    # remove product from cart
+    path('remove-from-cart/<uuid:product_id>/', views.remove_from_cart, name='remove_from_cart'),
 
 
     # authentication

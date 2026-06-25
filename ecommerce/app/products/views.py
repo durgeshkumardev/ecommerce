@@ -287,13 +287,10 @@ def user_login(request):
 
 
 
-
+@login_required(login_url='login_user')
 def add_to_cart(request, product_id):
 
     if request.method == "POST":
-
-       
-    
         if request.user.is_authenticated:
             messages.success(request, 'User is logged in')
         else:
@@ -336,7 +333,7 @@ def add_to_cart(request, product_id):
     })
 
 
-
+@login_required(login_url='user_login')
 def cart_page(request):
 
     cart = Cart.objects.filter(user=request.user).first()
@@ -423,3 +420,38 @@ def set_default_address(request, address_id):
     ).update(is_default=True)
 
     return redirect('cart_page')
+
+
+
+# remove the card product from the cart
+
+def remove_from_cart(request, product_id):
+
+    print("remove_from_cart called with product_id:", product_id)  # Debugging line
+
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            messages.success(request, 'User is logged in')
+        else:
+            messages.error(request, 'Please log in to remove items from your cart')
+            return redirect('login')  # Redirect to login page
+
+        product = get_object_or_404(Product, id=product_id)
+
+        cart = Cart.objects.filter(user=request.user).first()
+
+        if not cart:
+            return messages.error(request, 'Cart not found for the user')
+
+        cart_item = CartItem.objects.filter(
+            cart=cart,
+            product=product
+        ).first()
+
+        if cart_item:
+            cart_item.delete()
+            return redirect('cart_page')  # Redirect to cart page after removal
+        else:
+            return messages.error(request, 'Product not found in cart')
+
+    return redirect('cart_page')  # Redirect to cart page after removal

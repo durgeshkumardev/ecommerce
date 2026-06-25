@@ -141,7 +141,7 @@
                             ₹{{ item.subtotal }}
                         </h6>
 
-                        <a href="#"
+                        <a href="{% url 'remove_from_cart' item.product.id %}"
                            class="btn btn-sm btn-outline-danger">
                             Remove
                         </a>
