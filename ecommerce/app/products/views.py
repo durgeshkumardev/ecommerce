@@ -455,3 +455,31 @@ def remove_from_cart(request, product_id):
             return messages.error(request, 'Product not found in cart')
 
     return redirect('cart_page')  # Redirect to cart page after removal
+
+
+# checkout page 
+
+def checkout(request, addressId):
+    
+    cart = Cart.objects.filter(user=request.user).first()
+
+    items = []
+    total = 0
+
+    if cart:
+        items = cart.items.select_related('product')
+
+        for item in items:
+            item.subtotal = item.price * item.quantity
+            total += item.subtotal
+
+    # Get the selected address
+    selected_address = get_object_or_404(UserAddress, id=addressId, user=request.user)
+
+    context = {
+        'items': items,
+        'total': total,
+        'selected_address': selected_address,
+    }
+
+    return render(request, 'checkout.html', context)
